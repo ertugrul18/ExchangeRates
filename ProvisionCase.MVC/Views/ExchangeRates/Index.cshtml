@@ -1,0 +1,186 @@
+﻿@using Newtonsoft.Json
+@model IList<ExchangeRates>
+
+@{
+    Layout = null;
+    var liste = new List<string>();
+    foreach (var item in Model)
+    {
+        liste.Add(item.Name);
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.14.2/d3.js" charset="utf-8"></script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <title>Sample</title>
+    <style type="text/css">
+        #chart text {
+            fill: white;
+            font: 10px sans-serif;
+            text-anchor: end;
+        }
+
+        .axis text {
+            font: 10px sans-serif;
+        }
+
+        .axis path, .axis line {
+            fill: none;
+            stroke: #fff;
+            shape-rendering: crispEdges;
+        }
+
+        body {
+            background: #1a1a1a;
+            color: #eaeaea;
+            padding: 10px;
+            text-align:center;
+        }
+
+        path {
+            stroke: steelblue;
+            stroke-width: 2;
+            fill: none;
+        }
+    </style>
+</head>
+<body>
+<div class="row">
+    <form asp-action="Index" asp-controller="ExchangeRates" method="post">
+        <div class="col-9">
+            <input type="text" name="Code" id="Code" />
+        </div>
+        <div class="col-3">
+            <button type="submit" id="btnSubmit">Search</button>
+        </div>
+    </form>
+</div>
+<div id="chart"></div>
+   @* <table id="myTable" class="table table-active">
+        <thead>
+            <tr>
+                <td>Id</td>
+                <td>Code</td>
+                <td>Name</td>
+                <td>Alis Fiyati</td>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Code</td>
+                    <td>@item.Name</td>
+                    <td>@item.ForexBuying</td>
+                </tr>
+            }
+        </tbody>
+    </table>*@
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+
+          
+               
+              
+            var data=[];
+            var model = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+            console.log(model);
+
+            for (let i = 0; i < 10; i++) {
+
+                console.log(model[i].Id + " " + model[i].ForexBuying);
+               
+
+            }
+           
+
+                Plot(model);
+        
+
+            function Plot(gelenData) {
+              
+                var data =[]
+                
+                for (let i = 0; i < 67; i++) {
+                    data.push({ 'Year': gelenData[i].Id, 'Sale': parseFloat(gelenData[i].ForexBuying) })
+                    console.log(data[i]);
+                }
+               
+                var chartData = Array.from(data,
+                    p => ({ Year: p.Year, Sale: p.Sale }));
+
+                    
+                //Setup margin
+                var margin = { top: 30, right: 30, bottom: 35, left: 50 },
+                    width = 400 - margin.left - margin.right,
+                    height = 300 - margin.top - margin.bottom;
+
+                    console.log("Margin:"+margin);
+                //Create chart
+                var chart = d3.select("#chart")
+                    .append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                    console.log("chart:"+chart);
+                //Setup X axis
+
+                var x = d3.scaleLinear()
+                    .domain(d3.extent(chartData, function (d) { return d.Year+1; }))
+                    .range([0, width]);
+                chart.append("g")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(d3.axisBottom(x))
+                    .append("text")
+                    .text("Year")
+                    .attr("x", 0 + (width))
+                    .attr("y", 0 + margin.bottom)
+                    .attr("dx", "1em")
+                    .style("text-anchor", "middle");
+                
+                
+                //Setup Y axis
+                var y = d3.scaleLinear()
+                    .domain([0, d3.max(chartData, function (d) { return d.Sale+2; })])
+                    .range([height, 0]);
+                chart.append("g")
+                    .call(d3.axisLeft(y).ticks(10))
+                    .append("text")
+                    .text("Sales data")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 0 - margin.left)
+                    .attr("x", 0 - (height))
+                    .attr("dy", "1em")
+                    .style("text-anchor", "middle");
+                //Add line
+                chart.append("path")
+                    .datum(chartData)
+                    .attr("fill", "none")
+                    .attr("stroke", "steelblue")
+                    .attr("stroke-width", 1.5)
+                    .attr("d", d3.line()
+                        .x(function (d) { return x(d.Year) })
+                        .y(function (d) { return y(d.Sale) })
+                    );
+            }
+            //Plot();
+        });
+                        
+    
+</script>
+</body>
+</html>
+
+
+
