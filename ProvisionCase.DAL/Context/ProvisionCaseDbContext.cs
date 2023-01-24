@@ -20,7 +20,7 @@ namespace ProvisionCase.DAL.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
-            optionsBuilder.UseNpgsql("server=127.0.0.1:5432;Database=Provision1;user Id=postgres;password=postgrespw");
+            optionsBuilder.UseNpgsql("server=127.0.0.1;Database=Provision1;user Id=postgres;password=123");
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
