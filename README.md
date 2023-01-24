@@ -8,7 +8,8 @@
 
 
 # *Eksikler*
-- Docker File ve Cache Server 
+- Docker File 
+- Cache Server 
 
 
 ![](https://github.com/ertugrul18/ProvisionCase3/blob/master/ProjectImages/image1.png)
