@@ -1,8 +1,14 @@
 # ProvisionCase
 
 # *Açıklama*
-- asda
-- adad
+- Data API
+- Bussiness API
+- Database Server (PostgreSql)
+- Currency Web Site (MVC) 
+
+
+# *Eksikler*
+- Docker File ve Cache Server 
 
 
 ![](https://github.com/ertugrul18/ProvisionCase3/blob/master/ProjectImages/image1.png)
