@@ -1,0 +1,7 @@
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+COPY . ./API
+WORKDIR /API/
+RUN dotnet build ProvisionCase.API/ProvisionCase.API.csproj -c Release -o output
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
+COPY --from=build /API/output .
+ENTRYPOINT ["dotnet", "ProvisionCase.API.dll"]

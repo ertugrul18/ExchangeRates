@@ -1,0 +1,27 @@
+version: '3.4'
+services:
+  sqldata:
+    image: postgres
+    environment: 
+      - POSTGRES_PASSWORD=postgrespw
+    ports:
+      - "5432:5432"
+  api:
+    image: mcr.microsoft.com/dotnet/runtime:7.0
+    build:
+      context: .
+      dockerfile: DockerFileApi
+    ports:
+      - "8080:80"
+    depends_on:
+      - sqldata
+  mvc:
+    image: mcr.microsoft.com/dotnet/runtime:7.0
+    build:
+      context: .
+      dockerfile: DockerFileMVC
+    ports:
+      - "8081:80"
+    depends_on:
+      - sqldata
+      - api

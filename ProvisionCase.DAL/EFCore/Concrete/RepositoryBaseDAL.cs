@@ -29,22 +29,6 @@ namespace ProvisionCase.DAL.EFCore.Concrete
             return 0;
         }
 
-        //public async virtual Task<bool> CreateKeyValue(List<Dictionary<string, ExchangeRates>> listOfkeyValuePairs)
-        //{
-
-        //    try
-        //    {
-        //        await dbContext.Set<T>().AddAsync(listOfkeyValuePairs);
-        //        return await dbContext.SaveChangesAsync();
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //        throw ex;
-
-        //    }
-        //    return false;
-        //}
 
         public async virtual Task<ICollection<T>> GetAllAsync(Expression<Func<T, bool>> filter = null)
         {

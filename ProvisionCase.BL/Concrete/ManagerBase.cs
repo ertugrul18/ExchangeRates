@@ -29,8 +29,6 @@ namespace ProvisionCase.BL.Concrete
             return await RepositoryBaseDAL.GetAllAsync(filter);
         }
 
-        //public Task<bool> CreateKeyValue(List<Dictionary<string, ExchangeRates>> listOfkeyValuePairs)
-        //{
-        //}
+
     }
 }

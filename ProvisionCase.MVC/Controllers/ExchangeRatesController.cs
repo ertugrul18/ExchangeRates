@@ -14,7 +14,7 @@ namespace ProvisionCase.MVC.Controllers
 
         }
         [HttpGet]
-        public IActionResult Index(ExchangeRatesDTO exchangeRatesDTO)
+        public IActionResult Index()
         {
             ExchangeRatesDTO indexDtos = new ExchangeRatesDTO();
 
@@ -79,6 +79,11 @@ namespace ProvisionCase.MVC.Controllers
             }
             return View(sonuc);
 
+        }
+
+        public IActionResult D3Sample()
+        {
+            return View();
         }
 
 

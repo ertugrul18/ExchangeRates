@@ -9,18 +9,16 @@ namespace ProvisionCase.API.Controllers
     [ApiController]
     public class ExchangeRatesController : ControllerBase
     {
-        public string BaseUrl { get; } = @"https://northwind.vercel.app/";
 
-        public HttpClient Client { get; }
         public ExchangeRatesController(IExchangeRatesManager exchangeRatesManager)
         {
-            Client = new HttpClient();
-            Client.BaseAddress = new Uri(BaseUrl);
             this.exchangeRatesManager = exchangeRatesManager;
         }
 
         List<Dictionary<string, ExchangeRates>> listOfkeyValuePairs = new List<Dictionary<string, ExchangeRates>>();
         private readonly IExchangeRatesManager exchangeRatesManager;
+
+
 
         [HttpGet]
         public async Task<ActionResult> Get()
@@ -29,22 +27,29 @@ namespace ProvisionCase.API.Controllers
             var xmlDoc = new XmlDocument();
             xmlDoc.Load(exchangeRate);
 
-            for (int i = 2; i <= 78; i++)
+
+
+
+            for (int i = 2; i <= 60; i++)
             {
                 try
                 {
-                    var result = ExchangeRatesController.GetAllHistoricalExchangeRates(2023, 1, i);
+
+
+                    var result = ExchangeRatesController.GetAllHistoricalExchangeRates(DateTime.Now.Date.Year, DateTime.Now.Date.Month, i);
 
                     foreach (var item in result)
                     {
-                        ExchangeRates exchangeRates1 = new ExchangeRates
+                        ExchangeRates exchangeRates = new ExchangeRates
                         {
-                            Id = 0,
+                            Id = item.Value.Id,//id = 0 dı
                             Code = item.Value.Code,
                             ForexBuying = item.Value.ForexBuying,
-                            Name = item.Value.Name
+                            Name = item.Value.Name,
+                            Date = new DateTime(DateTime.Now.Date.Year, DateTime.Now.Date.Month, i)
+
                         };
-                        await exchangeRatesManager.CreateAsync(exchangeRates1);
+                        await exchangeRatesManager.CreateAsync(exchangeRates);
                     }
                 }
                 catch (Exception ex)
@@ -53,11 +58,11 @@ namespace ProvisionCase.API.Controllers
                     continue;
                 }
             }
-
-
-            //  Console.WriteLine(depo);
             return Ok(listOfkeyValuePairs);
         }
+
+
+
 
         public static Dictionary<string, ExchangeRates> GetAllHistoricalExchangeRates(int Year, int Month, int Day)
         {
@@ -74,6 +79,11 @@ namespace ProvisionCase.API.Controllers
                 throw new Exception("The date specified may be a weekend or a public holiday!");
             }
         }
+
+
+
+
+
         private static Dictionary<string, ExchangeRates> GetExchangeRates(string Link)
         {
             try
@@ -97,7 +107,10 @@ namespace ProvisionCase.API.Controllers
                 {
                     Name = "TRY",
                     Code = "TRY",
-                    ForexBuying = 1
+                    ForexBuying = 1,
+                    Date = Convert.ToDateTime(tarih.InnerText)
+
+
                 });
 
                 for (int i = 0; i < adi.Count; i++)
@@ -112,7 +125,6 @@ namespace ProvisionCase.API.Controllers
 
                     ExchangeRates.Add(kod.Item(i).InnerText.ToString(), cur);
                 }
-
                 return ExchangeRates;
             }
             catch (Exception ex)
